@@ -12,12 +12,9 @@ public class ArticulationPoints {
 
         if (airportMap.size() < 3) return critical;
 
-        // Проверяем каждый аэропорт по очереди
         for (Airport candidate : airportMap.values()) {
             int candidateId = candidate.getId();
 
-            // Проверяем: есть ли хотя бы одна пара (A, B), путь между которыми
-            // существовал, но пропал после удаления candidate?
             if (isActuallyCritical(graph, airportMap, candidateId)) {
                 critical.add(candidate);
             }
@@ -26,29 +23,22 @@ public class ArticulationPoints {
     }
 
     private boolean isActuallyCritical(FlightGraph graph, Map<Integer, Airport> airportMap, int skipId) {
-        // Выбираем несколько случайных "контрольных" точек для проверки связности
-        // Это быстрее и точнее для ориентированных графов
         List<Integer> testNodes = new ArrayList<>(airportMap.keySet());
         Collections.shuffle(testNodes);
 
-        // Берем первые 5 узлов как источники (для скорости)
         int samples = Math.min(5, testNodes.size());
 
         for (int i = 0; i < samples; i++) {
             int startId = testNodes.get(i);
             if (startId == skipId) continue;
 
-            // 1. Считаем достижимость С узлом
             Set<Integer> withNode = bfs(graph, airportMap, startId, -1);
 
-            // 2. Считаем достижимость БЕЗ узла
             Set<Integer> withoutNode = bfs(graph, airportMap, startId, skipId);
 
-            // Если без узла мы потеряли доступ к какой-то части графа,
-            // которую видели раньше (и это не сам удаленный узел)
             for (Integer reachedId : withNode) {
                 if (reachedId != skipId && !withoutNode.contains(reachedId)) {
-                    return true; // Узел реально критический
+                    return true; 
                 }
             }
         }

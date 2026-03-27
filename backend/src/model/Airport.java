@@ -6,9 +6,8 @@ public class Airport {
     private String name;
     private double lat;
     private double lng;
-    private String cityName; // Поле для города 🏙️
+    private String cityName; 
 
-    // Конструктор теперь принимает 6 параметров
     public Airport(int id, String code, String name, double lat, double lng, String cityName) {
         this.id = id;
         this.code = code;
@@ -24,7 +23,6 @@ public class Airport {
     public double getLat() { return lat; }
     public double getLng() { return lng; }
 
-    // Исправленный метод без лишних скобок
     public String getCityName() {
         return this.cityName;
     }

@@ -12,7 +12,6 @@
 
         public String fetchTable(String tableName) {
             JSONArray allRows = new JSONArray();
-            // Используем обычный стейтмент для имен таблиц (так как их нельзя передать через параметры PreparedStatement)
             String sql = "SELECT * FROM " + tableName;
 
             try (Connection conn = DriverManager.getConnection(url, user, password);
@@ -27,7 +26,6 @@
                     for (int i = 1; i <= columns; i++) {
                         String columnName = md.getColumnName(i);
                         Object value = rs.getObject(i);
-                        // Обработка null значений, чтобы JSON не "ломался"
                         row.put(columnName, value != null ? value : "");
                     }
                     allRows.put(row);
@@ -44,19 +42,15 @@
             try (Connection conn = DriverManager.getConnection(url, user, password)) {
                 DatabaseMetaData metaData = conn.getMetaData();
 
-                // "Flights" — это имя твоей БД из URL
-                // "dbo" — стандартная схема в SQL Server
                 try (ResultSet rs = metaData.getTables("Flights", "dbo", "%", new String[]{"TABLE"})) {
                     while (rs.next()) {
                         String name = rs.getString("TABLE_NAME");
-                        // Убираем системные таблицы, если они пролезли через фильтр dbo
                         if (!name.startsWith("sys") && !name.startsWith("MS")) {
                             tables.add(name);
                         }
                     }
                 }
 
-                // Если после этого список всё еще пуст, попробуем запасной вариант (через прямой SQL):
                 if (tables.isEmpty()) {
                     try (Statement stmt = conn.createStatement();
                          ResultSet rs2 = stmt.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'")) {
@@ -97,8 +91,6 @@
             for (String key : rowData.keySet()) {
                 Object value = rowData.get(key);
 
-                // Если в React поле осталось пустым, мы его просто НЕ включаем в запрос,
-                // тогда SQL Server сам подставит NULL или значение по умолчанию.
                 if (value == null || value.toString().trim().isEmpty()) {
                     continue;
                 }
@@ -110,11 +102,10 @@
                 columns.append("[").append(key).append("]");
                 placeholders.append("?");
 
-                // Пытаемся понять: это число или строка?
                 String strVal = value.toString().trim();
-                if (strVal.matches("-?\\d+")) { // Целое число
+                if (strVal.matches("-?\\d+")) { 
                     values.add(Integer.parseInt(strVal));
-                } else if (strVal.matches("-?\\d+(\\.\\d+)?")) { // Дробное
+                } else if (strVal.matches("-?\\d+(\\.\\d+)?")) { 
                     values.add(Double.parseDouble(strVal));
                 } else {
                     values.add(strVal);

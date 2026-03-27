@@ -24,10 +24,8 @@ public class Main {
             FlightGraph flightGraph = new FlightGraph();
             loadRoutes(flightGraph, airportMap, conn);
 
-            // Создаем объект здесь!
             DatabaseHelper dbHelper = new DatabaseHelper();
 
-            // Передаем его в сервер
             startHttpServer(flightGraph, dbHelper,airportMap);
 
         } catch (SQLException e) {
@@ -49,12 +47,11 @@ public class Main {
     private static void startHttpServer(FlightGraph flightGraph, DatabaseHelper databaseHelper, Map<Integer, Airport> airportMap) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
 
-        // Эндпоинт /graph - загрузка всех данных для карты
         server.createContext("/graph", exchange -> {
             try {
                 JSONObject result = new JSONObject();
                 JSONArray airports = new JSONArray();
-                for (Airport a : airportMap.values()) {  // <-- используем все аэропорты
+                for (Airport a : airportMap.values()) { 
                     JSONObject obj = new JSONObject();
                     obj.put("airportID", a.getId());
                     obj.put("code", a.getCode());
@@ -105,7 +102,6 @@ public class Main {
             }
         });
 
-        // Эндпоинт /cheapest - Самый дешевый путь
         server.createContext("/cheapest", exchange -> {
             try {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
@@ -130,7 +126,6 @@ public class Main {
             }
         });
 
-        // --- НОВЫЙ ЭНДПОИНТ: BFS ---
         server.createContext("/bfs", exchange -> {
             try {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
@@ -143,7 +138,6 @@ public class Main {
                     return;
                 }
 
-                // --- ЛОГИКА BFS ПРЯМО ЗДЕСЬ ---
                 Set<Integer> visited = new HashSet<>();
                 JSONArray usedRoutes = new JSONArray();
                 JSONArray reachableIds = new JSONArray();
@@ -167,10 +161,8 @@ public class Main {
                                 levels.put(destId, currentLevel + 1);
                                 queue.add(flightGraph.getAirportMap().get(destId));
 
-                                // Добавляем ID аэропорта
                                 reachableIds.put(destId);
 
-                                // Добавляем маршрут (линию)
                                 JSONObject routeObj = new JSONObject();
                                 routeObj.put("source", current.getId());
                                 routeObj.put("destination", destId);
@@ -182,7 +174,7 @@ public class Main {
 
                 JSONObject json = new JSONObject();
                 json.put("reachableIds", reachableIds);
-                json.put("usedRoutes", usedRoutes); // ТЕПЕРЬ ФРОНТ УВИДИТ ЛИНИИ
+                json.put("usedRoutes", usedRoutes);
 
                 sendJsonResponse(exchange, json.toString());
             } catch (Exception e) {
@@ -210,7 +202,6 @@ public class Main {
             }
         });
 
-        // Эндпоинт /mst - расчет минимального остовного дерева
         server.createContext("/mst", exchange -> {
             try {
                 List<Route> mst = PrimMST.computeMST(flightGraph);
@@ -235,7 +226,6 @@ public class Main {
 
         server.createContext("/budget", exchange -> {
             try {
-                // Убедись, что метод queryToMap доступен в этом классе
                 Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
 
                 if (params.get("id") == null || params.get("maxBudget") == null) {
@@ -247,13 +237,11 @@ public class Main {
                 double maxBudget = Double.parseDouble(params.get("maxBudget"));
 
                 BudgetFinder budgetFinder = new BudgetFinder();
-                // Используем flightGraph, переданный в параметры startHttpServer
                 Set<Integer> reachableIds = budgetFinder.findAirportsWithinBudget(flightGraph, startId, maxBudget);
 
                 JSONObject json = new JSONObject();
                 json.put("reachableIds", new JSONArray(reachableIds));
 
-                // Исправлено: вызываем правильный метод отправки
                 sendJsonResponse(exchange, json.toString());
 
             } catch (Exception e) {
@@ -284,14 +272,13 @@ public class Main {
                 }
 
                 String json = databaseHelper.fetchTable(table);
-                sendJsonResponse(exchange, json); // Используем твой готовый метод для отправки
+                sendJsonResponse(exchange, json); 
             } catch (Exception e) {
                 e.printStackTrace();
                 exchange.sendResponseHeaders(500, 0);
             }
         });
 
-        // Удаление записи
         server.createContext("/api/delete", exchange -> {
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
                 sendOptionsResponse(exchange);
@@ -318,7 +305,6 @@ public class Main {
 
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    // Читаем JSON из тела запроса
                     String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     JSONObject jsonBody = new JSONObject(body);
 
@@ -332,7 +318,7 @@ public class Main {
                     exchange.sendResponseHeaders(500, 0);
                 }
             } else {
-                exchange.sendResponseHeaders(405, 0); // Метод не позволен
+                exchange.sendResponseHeaders(405, 0); 
             }
         });
 

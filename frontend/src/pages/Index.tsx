@@ -81,7 +81,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
   const [newRowData, setNewRowData] = useState<any>({});
   // ----------------------------
 
-  // Загрузка списка таблиц
   useEffect(() => {
     fetch("http://localhost:8081/api/tables")
       .then(res => res.json())
@@ -91,7 +90,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
       });
   }, []);
 
-  // Загрузка данных выбранной таблицы
   const loadTableData = (tableName: string) => {
     fetch(`http://localhost:8081/api/data?table=${tableName}`)
       .then(res => res.json())
@@ -124,7 +122,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
     
     const result = await response.json();
     if (result.success) {
-      // Обновляем данные в таблице после удаления
       loadTableData(activeTable);
     } else {
       alert("Error");
@@ -148,9 +145,9 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
 
       const result = await response.json();
       if (result.success) {
-        setIsAddModalOpen(false); // Закрываем окно
-        setNewRowData({});        // Очищаем форму
-        loadTableData(activeTable); // Обновляем таблицу
+        setIsAddModalOpen(false); 
+        setNewRowData({});    
+        loadTableData(activeTable); 
       } else {
         alert("Save Error");
       }
@@ -159,7 +156,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
     }
   };
 
-  // Фильтрация для поиска
   const filteredData = data.filter(item =>
     Object.values(item).some(val => String(val).toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -170,7 +166,7 @@ const toggleSelectAll = () => {
   } else {
     const idKey = Object.keys(data[0] || {}).find(k => k.toLowerCase().includes("id"));
     if (idKey) {
-      setSelectedIds(filteredData.map(item => item[idKey])); // Выбрать все ID
+      setSelectedIds(filteredData.map(item => item[idKey])); 
     }
   }
 };
@@ -203,20 +199,18 @@ const deleteSelected = async () => {
 
 return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8 overflow-auto">
-      {/* Шапка */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-blue-500">Database Management</h1>
         <button onClick={onBack} className="bg-white/10 px-4 py-2 rounded-lg">Back to the map</button>
       </div>
 
-      {/* Переключатель таблиц */}
       <div className="flex flex-wrap gap-2 mb-6">
         {tables.map(tab => (
           <button 
             key={tab} 
             onClick={() => {
               setActiveTable(tab);
-              setSelectedIds([]); // Сбрасываем выбор при смене таблицы
+              setSelectedIds([]); 
             }}
             className={`px-4 py-2 rounded ${activeTable === tab ? 'bg-blue-600' : 'bg-white/5'}`}
           >
@@ -225,7 +219,6 @@ return (
         ))}
       </div>
 
-      {/* Панель инструментов: Поиск, Удаление выбранного и Добавить */}
       <div className="mb-6 flex gap-4 items-center">
         <div className="relative">
           <input 
@@ -237,7 +230,6 @@ return (
           />
         </div>
 
-        {/* Кнопка массового удаления */}
         <button 
           onClick={deleteSelected}
           disabled={selectedIds.length === 0}
@@ -270,12 +262,10 @@ return (
         </button>
       </div>
       
-      {/* Таблица */}
       <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
         <table className="w-full text-left">
           <thead className="bg-white/10 text-xs uppercase text-gray-400">
             <tr>
-              {/* Чекбокс "Выбрать все" */}
               <th className="px-6 py-4 w-10">
                 <input 
                   type="checkbox" 
@@ -325,7 +315,6 @@ return (
         </table>
       </div>
 
-      {/* Модальное окно добавления */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[2000]">
           <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-white/10 w-full max-w-md shadow-2xl">
@@ -379,7 +368,6 @@ return (
   fetchData();
 }, []);
 
-  // Функция для Dijkstra
   const findPath = async (fromId: number, toId: number) => {
     const apiType = selectedCategory === "DijkstraCheapest" ? "cheapest" : "fastest";
     try {
@@ -398,9 +386,7 @@ return (
     }
   };
 
-  // Новая функция для BFS
-// В функции findReachable
-const [bfsRoutes, setBfsRoutes] = useState<Route[]>([]); // Добавьте новый стейт
+const [bfsRoutes, setBfsRoutes] = useState<Route[]>([]);
 
 const findReachable = async (fromId: number) => {
   try {
@@ -430,7 +416,7 @@ const findCritical = async () => {
     const data = await response.json();
     
     if (data.criticalIds) {
-      setHighlightedPath(data.criticalIds); // Используем тот же стейт для подсветки точек
+      setHighlightedPath(data.criticalIds);
     }
   } catch (error) {
     console.error("Critical Airports error:", error);
@@ -471,8 +457,8 @@ const findByBudget = async (airportId: number) => {
     if (data.usedRoutes) {
       setBudgetRoutes(
         data.usedRoutes.map((r: any) => ({
-          source: Number(r.source),      // Важно: в число
-          destination: Number(r.destination), // Важно: в число
+          source: Number(r.source),      
+          destination: Number(r.destination), 
           distance: Number(r.distance)
         }))
       );
@@ -486,7 +472,7 @@ const findByBudget = async (airportId: number) => {
 
   if (selectedCategory === "BFSK") {
     setSourceAirport(airport);
-    findReachable(airport.airportID); // сразу вызываем BFS
+    findReachable(airport.airportID); 
     return;
   }
 
@@ -496,7 +482,6 @@ const findByBudget = async (airportId: number) => {
     return;
   }
 
-    // Логика для Dijkstra
     if (selectedCategory !== "DijkstraFastest" && selectedCategory !== "DijkstraCheapest") return;
     if (!sourceAirport || (sourceAirport && targetAirport)) {
       setSourceAirport(airport);
@@ -546,7 +531,7 @@ onClick={() => {
   setSourceAirport(null);
   setTargetAirport(null);
   setHighlightedPath([]);
-  setBfsRoutes([]);       // Очищаем линии BFS
+  setBfsRoutes([]);     
 
   if (newCategory === "MST") {
     findMST();
@@ -578,7 +563,6 @@ onClick={() => {
 </button>
       </div>
 
-      {/* Панель управления K для BFS */}
       {selectedCategory === "BFSK" && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-black/80 border border-amber-500/40 p-2 px-4 rounded-full backdrop-blur-md animate-in fade-in slide-in-from-top-4">
           <span className="text-[10px] font-bold text-amber-400 uppercase tracking-tighter">Max Transfers (K):</span>
@@ -593,7 +577,6 @@ onClick={() => {
         </div>
       )}
 
-      {/* Панель управления бюджетом */}
 {selectedCategory === "TravelBudget" && (
   <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-black/80 border border-green-500/40 p-2 px-4 rounded-full backdrop-blur-md animate-in fade-in slide-in-from-top-4">
     <span className="text-[10px] font-bold text-green-500 uppercase tracking-tighter">Max Budget ($):</span>
@@ -672,7 +655,6 @@ if (isBudgetMode) {
         }}
       />
       
-      {/* Рисуем стрелку только если путь активен */}
       {isHighlighted && (
   <Polygon
     positions={getArrowHead(from, to)}
@@ -722,7 +704,6 @@ if (isBudgetMode) {
         })}
       </MapContainer>
 
-      {/* Окно статистики BFS */}
       {selectedCategory === "BFSK" && sourceAirport && (
         <div className="absolute right-6 top-24 z-[1001] w-64 bg-black/90 backdrop-blur-xl border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(251,191,36,0.15)]">
           <h3 className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
@@ -739,7 +720,7 @@ if (isBudgetMode) {
   onClick={() => { 
     setHighlightedPath([]); 
     setSourceAirport(null); 
-    setBfsRoutes([]); // <--- ОЧИЩАЕМ ЛИНИИ ТУТ
+    setBfsRoutes([]);
   }}
   className="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] transition-all"
 >
@@ -773,7 +754,6 @@ if (isBudgetMode) {
   </div>
 )}
 
-      {/* Окно Dijkstra (без изменений) */}
       {highlightedPath.length > 0 && (selectedCategory === "DijkstraFastest" || selectedCategory === "DijkstraCheapest") && (
         <div className="absolute right-6 top-24 z-[1001] w-72 bg-black/90 backdrop-blur-xl border border-blue-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
           <h3 className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">

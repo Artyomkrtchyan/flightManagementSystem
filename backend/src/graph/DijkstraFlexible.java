@@ -16,7 +16,6 @@ public class DijkstraFlexible {
             this.parents = parents;
         }
 
-        // Вспомогательный метод для получения списка ID аэропортов в пути
         public List<Integer> getPathTo(Airport target) {
             List<Integer> path = new ArrayList<>();
             for (Airport at = target; at != null; at = parents.get(at)) {
@@ -34,7 +33,7 @@ public class DijkstraFlexible {
     ) {
         Map<Integer, Airport> airportMap = graph.getAirportMap();
         Map<Airport, Double> dist = new HashMap<>();
-        Map<Airport, Airport> parentMap = new HashMap<>(); // Храним путь 🚩
+        Map<Airport, Airport> parentMap = new HashMap<>(); 
 
         for (Airport a : airportMap.values()) dist.put(a, Double.POSITIVE_INFINITY);
         dist.put(source, 0.0);
@@ -53,7 +52,7 @@ public class DijkstraFlexible {
                 double newDist = dist.get(current.airport) + weightFunc.applyAsDouble(route);
                 if (newDist < dist.get(dest)) {
                     dist.put(dest, newDist);
-                    parentMap.put(dest, current.airport); // Запоминаем, что в dest пришли из current
+                    parentMap.put(dest, current.airport); 
                     pq.add(new AirportDistance(dest, newDist));
                 }
             }

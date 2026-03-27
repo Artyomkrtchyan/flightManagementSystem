@@ -7,7 +7,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. Загружаем список всех таблиц из БД
   useEffect(() => {
     fetch("http://localhost:8081/api/tables")
       .then((res) => res.json())
@@ -15,10 +14,9 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
         setTables(list);
         if (list.length > 0) setActiveTable(list[0]);
       })
-      .catch((err) => console.error("Ошибка при получении списка таблиц:", err));
+      .catch((err) => console.error("Error:", err));
   }, []);
 
-  // 2. Загружаем данные конкретной таблицы при смене вкладки
   const loadTableData = (tableName: string) => {
     setLoading(true);
     fetch(`http://localhost:8081/api/data?table=${tableName}`)
@@ -28,7 +26,7 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Ошибка при загрузке данных:", err);
+        console.error("Loading Error:", err);
         setLoading(false);
       });
   };
@@ -84,7 +82,7 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
           ))}
         </div>
 
-        {/* Content: Таблица с данными */}
+        {/* Content: Tables */}
         <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm">
           <div className="overflow-x-auto max-h-[70vh]">
             <table className="w-full text-left border-collapse">
@@ -114,7 +112,7 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
           {data.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center p-20 text-gray-500 italic">
               <Database size={48} className="mb-4 opacity-10" />
-              Таблица "{activeTable}" пуста или не содержит данных
+              Таблица "{activeTable}" Empty
             </div>
           )}
         </div>

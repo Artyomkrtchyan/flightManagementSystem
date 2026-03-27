@@ -19,11 +19,9 @@ public class PrimMST {
         Map<Integer, Airport> airportMap = graph.getAirportMap();
         if (airportMap.isEmpty()) return mstRoutes;
 
-        // Start from any airport
         Airport start = airportMap.values().iterator().next();
         visited.add(start);
 
-        // PriorityQueue: smallest distance first
         PriorityQueue<Route> pq = new PriorityQueue<>(Comparator.comparingDouble(Route::getBaseDistanceKM));
         pq.addAll(graph.getRoutesFrom(start));
 
@@ -32,14 +30,12 @@ public class PrimMST {
             Airport source = airportMap.get(route.getSourceAirportID());
             Airport dest = airportMap.get(route.getDestinationAirportID());
 
-            // Choose the airport not yet visited
             Airport next = !visited.contains(dest) ? dest : (!visited.contains(source) ? source : null);
             if (next == null) continue;
 
             mstRoutes.add(route);
             visited.add(next);
 
-            // Add all edges from next airport to PQ
             for (Route r : graph.getRoutesFrom(next)) {
                 Airport rDest = airportMap.get(r.getDestinationAirportID());
                 if (!visited.contains(rDest)) {

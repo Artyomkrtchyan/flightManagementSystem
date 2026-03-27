@@ -15,7 +15,6 @@ public class BFS {
     public static Set<Airport> reachableWithinK(FlightGraph graph, Airport source, int K) {
         Map<Integer, Airport> airportMap = graph.getAirportMap();
 
-        // Используем ID (Integer) вместо объектов Airport для надежности
         Set<Integer> visitedIds = new HashSet<>();
         Queue<Airport> queue = new LinkedList<>();
         Map<Integer, Integer> levelMap = new HashMap<>();
@@ -30,7 +29,6 @@ public class BFS {
             Airport current = queue.poll();
             int currentLevel = levelMap.get(current.getId());
 
-            // Если мы достигли лимита пересадок, дальше этого узла не идем
             if (currentLevel >= K) continue;
 
             for (Route route : graph.getRoutesFrom(current)) {
@@ -47,7 +45,6 @@ public class BFS {
             }
         }
 
-        // Собираем результат обратно в Set<Airport>
         Set<Airport> result = new HashSet<>();
         for (Integer id : visitedIds) {
             if (id != source.getId()) {
