@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 44% 12%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 44% 12%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 8%;
+
+    --secondary: 220 40% 18%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 220 30% 15%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 199 89% 60%;
+    --accent-foreground: 222 47% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 30% 20%;
+    --input: 220 30% 20%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    --navy-deep: 222 47% 5%;
+    --navy-dark: 222 47% 8%;
+    --navy-medium: 222 44% 12%;
+    --navy-light: 220 40% 18%;
+    --sky-blue: 199 89% 60%;
+    --sky-glow: 199 89% 70%;
+    --route-gold: 42 92% 56%;
+    --route-cyan: 185 80% 55%;
+    --airport-glow: 199 100% 70%;
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 8%;
+    --sidebar-accent: 220 40% 18%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glow-dot {
+    box-shadow: 0 0 8px 3px hsl(var(--airport-glow) / 0.6),
+                0 0 20px 6px hsl(var(--airport-glow) / 0.2);
+  }
+  .glow-dot-sm {
+    box-shadow: 0 0 4px 2px hsl(var(--airport-glow) / 0.4),
+                0 0 10px 4px hsl(var(--airport-glow) / 0.15);
+  }
+  .nav-shadow {
+    box-shadow: 0 4px 30px hsl(var(--navy-deep) / 0.8);
+  }
+  .card-glow {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.08);
+  }
+}
+
+/* src/styles/globals.css */
+
+/* Убираем стандартный белый фон, рамку и тень Leaflet */
+.leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Скрываем белый треугольник (стрелочку) под окошком */
+.leaflet-tooltip-top:before, 
+.leaflet-tooltip-bottom:before, 
+.leaflet-tooltip-left:before, 
+.leaflet-tooltip-right:before {
+  display: none !important;
+}
