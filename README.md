@@ -156,9 +156,9 @@ flightManagementSystem/
 ---
 
 ## 👥 Authors
-**Artyom Mkrtchyan** **Mane Mazmandyan**
+**Artyom Mkrtchyan** and **Mane Mazmandyan**
 
 ---
 
 *Université Française en Arménie (UFAR) — 2026*  
-*Courses: Data Structures & Databases*
+*Courses: Data Structures & Databases 1*
