@@ -4,9 +4,20 @@ import model.Airport;
 import model.Route;
 import java.util.*;
 
-/**
- * Complexity: O(E log V) Time, O(V + E) Memory.
- */
+/*
+Time Complexity:
+O((V + E) log V)
+- V = number of airports
+- E = number of routes
+- Each node processed using priority queue (log V)
+- Each edge relaxed once
+
+Memory Complexity:
+O(V)
+- minCosts map stores best cost for each airport
+- priority queue stores up to V nodes in worst case
+*/
+
 public class BudgetFinder {
 
     public Set<Integer> findAirportsWithinBudget(FlightGraph graph, int startId, double maxBudget) {
@@ -29,7 +40,7 @@ public class BudgetFinder {
 
             for (Route route : graph.getRoutesFrom(currentAirport)) {
                 int nextId = route.getDestinationAirportID();
-                double price = route.getTicketPrice(); // Замени на route.getPrice(), если есть такое поле
+                double price = route.getTicketPrice();
                 double newTotalCost = current.cost + price;
 
                 if (newTotalCost <= maxBudget && newTotalCost < minCosts.getOrDefault(nextId, Double.MAX_VALUE)) {

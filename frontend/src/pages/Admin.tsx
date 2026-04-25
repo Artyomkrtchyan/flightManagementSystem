@@ -7,7 +7,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. Загружаем список всех таблиц из БД
   useEffect(() => {
     fetch("http://localhost:8081/api/tables")
       .then((res) => res.json())
@@ -18,7 +17,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
       .catch((err) => console.error("Ошибка при получении списка таблиц:", err));
   }, []);
 
-  // 2. Загружаем данные конкретной таблицы при смене вкладки
   const loadTableData = (tableName: string) => {
     setLoading(true);
     fetch(`http://localhost:8081/api/data?table=${tableName}`)
@@ -39,7 +37,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-6 font-sans">
-      {/* Header */}
       <div className="flex justify-between items-center mb-8 bg-white/5 p-4 rounded-2xl border border-white/10 shadow-xl">
         <div className="flex items-center gap-4">
           <button 
@@ -65,7 +62,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Sidebar: Список таблиц */}
         <div className="w-full md:w-64 space-y-2">
           <h3 className="text-[10px] font-bold text-gray-500 uppercase px-2 mb-4">Таблицы в базе</h3>
           {tables.map((table) => (
@@ -84,7 +80,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
           ))}
         </div>
 
-        {/* Content: Таблица с данными */}
         <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm">
           <div className="overflow-x-auto max-h-[70vh]">
             <table className="w-full text-left border-collapse">
@@ -114,7 +109,7 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
           {data.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center p-20 text-gray-500 italic">
               <Database size={48} className="mb-4 opacity-10" />
-              Таблица "{activeTable}" пуста или не содержит данных
+              Table "{activeTable}" empty
             </div>
           )}
         </div>

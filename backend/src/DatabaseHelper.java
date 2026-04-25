@@ -26,6 +26,7 @@
                     for (int i = 1; i <= columns; i++) {
                         String columnName = md.getColumnName(i);
                         Object value = rs.getObject(i);
+                        // Обработка null значений, чтобы JSON не "ломался"
                         row.put(columnName, value != null ? value : "");
                     }
                     allRows.put(row);
@@ -45,6 +46,7 @@
                 try (ResultSet rs = metaData.getTables("Flights", "dbo", "%", new String[]{"TABLE"})) {
                     while (rs.next()) {
                         String name = rs.getString("TABLE_NAME");
+                        // Убираем системные таблицы, если они пролезли через фильтр dbo
                         if (!name.startsWith("sys") && !name.startsWith("MS")) {
                             tables.add(name);
                         }
@@ -78,7 +80,7 @@
                 return affectedRows > 0;
 
             } catch (SQLException e) {
-                System.err.println("Ошибка при удалении: " + e.getMessage());
+                System.err.println("Error: " + e.getMessage());
                 return false;
             }
         }
@@ -103,9 +105,9 @@
                 placeholders.append("?");
 
                 String strVal = value.toString().trim();
-                if (strVal.matches("-?\\d+")) { 
+                if (strVal.matches("-?\\d+")) { // Целое число
                     values.add(Integer.parseInt(strVal));
-                } else if (strVal.matches("-?\\d+(\\.\\d+)?")) { 
+                } else if (strVal.matches("-?\\d+(\\.\\d+)?")) { // Дробное
                     values.add(Double.parseDouble(strVal));
                 } else {
                     values.add(strVal);

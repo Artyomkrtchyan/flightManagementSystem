@@ -51,7 +51,7 @@ public class Main {
             try {
                 JSONObject result = new JSONObject();
                 JSONArray airports = new JSONArray();
-                for (Airport a : airportMap.values()) { 
+                for (Airport a : airportMap.values()) {
                     JSONObject obj = new JSONObject();
                     obj.put("airportID", a.getId());
                     obj.put("code", a.getCode());
@@ -228,16 +228,16 @@ public class Main {
             try {
                 Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
 
-                if (params.get("id") == null || params.get("maxBudget") == null) {
-                    exchange.sendResponseHeaders(400, -1);
-                    return;
-                }
-
                 int startId = Integer.parseInt(params.get("id"));
                 double maxBudget = Double.parseDouble(params.get("maxBudget"));
 
                 BudgetFinder budgetFinder = new BudgetFinder();
-                Set<Integer> reachableIds = budgetFinder.findAirportsWithinBudget(flightGraph, startId, maxBudget);
+
+                Set<Integer> reachableIds = budgetFinder.findAirportsWithinBudget(
+                        flightGraph, startId, maxBudget
+                );
+
+                reachableIds.add(startId);
 
                 JSONObject json = new JSONObject();
                 json.put("reachableIds", new JSONArray(reachableIds));
@@ -246,11 +246,7 @@ public class Main {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    exchange.sendResponseHeaders(500, -1);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                exchange.sendResponseHeaders(500, -1);
             } finally {
                 exchange.close();
             }
@@ -272,7 +268,7 @@ public class Main {
                 }
 
                 String json = databaseHelper.fetchTable(table);
-                sendJsonResponse(exchange, json); 
+                sendJsonResponse(exchange, json);
             } catch (Exception e) {
                 e.printStackTrace();
                 exchange.sendResponseHeaders(500, 0);
@@ -318,12 +314,9 @@ public class Main {
                     exchange.sendResponseHeaders(500, 0);
                 }
             } else {
-                exchange.sendResponseHeaders(405, 0); 
+                exchange.sendResponseHeaders(405, 0);
             }
         });
-
-
-
 
         server.setExecutor(null);
         server.start();
@@ -396,6 +389,4 @@ public class Main {
         }
         return result;
     }
-
-
 }

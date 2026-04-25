@@ -5,7 +5,6 @@ import { Wallet, Network, TreePine, Sun, Moon, Lamp, Database, Trash2, Search } 
 import StatusBar from "@/components/StatusBar";
 
 import type { LatLngBoundsExpression } from "leaflet";
-import Admin from "./Admin"
 interface Airport {
   airportID: number;
   code: string;
@@ -33,11 +32,14 @@ const Index = () => {
   const [totalDistance, setTotalDistance] = useState<number | null>(null); 
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [maxBudget, setMaxBudget] = useState<number>(1000);
+  const [maxBudget, setMaxBudget] = useState<number>(500);
   const [budgetRoutes, setBudgetRoutes] = useState<Route[]>([]);
   const [kValue, setKValue] = useState<number>(1);
 
-  const maxBounds: LatLngBoundsExpression = [[-90, -180], [90, 180]];
+const maxBounds: LatLngBoundsExpression = [
+  [-85, -180],
+  [85, 180]
+];
   
 
 const getArrowHead = (from: Airport, to: Airport) => {
@@ -79,9 +81,7 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
-  // ----------------------------
 
-  // Загрузка списка таблиц
   useEffect(() => {
     fetch("http://localhost:8081/api/tables")
       .then(res => res.json())
@@ -91,7 +91,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
       });
   }, []);
 
-  // Загрузка данных выбранной таблицы
   const loadTableData = (tableName: string) => {
     fetch(`http://localhost:8081/api/data?table=${tableName}`)
       .then(res => res.json())
@@ -124,7 +123,6 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
     
     const result = await response.json();
     if (result.success) {
-      // Обновляем данные в таблице после удаления
       loadTableData(activeTable);
     } else {
       alert("Error");
@@ -148,9 +146,9 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
 
       const result = await response.json();
       if (result.success) {
-        setIsAddModalOpen(false); // Закрываем окно
-        setNewRowData({});        // Очищаем форму
-        loadTableData(activeTable); // Обновляем таблицу
+        setIsAddModalOpen(false); 
+        setNewRowData({});        
+        loadTableData(activeTable); 
       } else {
         alert("Save Error");
       }
@@ -159,14 +157,13 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
     }
   };
 
-  // Фильтрация для поиска
   const filteredData = data.filter(item =>
     Object.values(item).some(val => String(val).toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
 const toggleSelectAll = () => {
   if (selectedIds.length === filteredData.length) {
-    setSelectedIds([]); // Снять выделение со всех
+    setSelectedIds([]); 
   } else {
     const idKey = Object.keys(data[0] || {}).find(k => k.toLowerCase().includes("id"));
     if (idKey) {
@@ -203,20 +200,19 @@ const deleteSelected = async () => {
 
 return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8 overflow-auto">
-      {/* Шапка */}
+
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-blue-500">Database Management</h1>
         <button onClick={onBack} className="bg-white/10 px-4 py-2 rounded-lg">Back to the map</button>
       </div>
 
-      {/* Переключатель таблиц */}
       <div className="flex flex-wrap gap-2 mb-6">
         {tables.map(tab => (
           <button 
             key={tab} 
             onClick={() => {
               setActiveTable(tab);
-              setSelectedIds([]); // Сбрасываем выбор при смене таблицы
+              setSelectedIds([]); 
             }}
             className={`px-4 py-2 rounded ${activeTable === tab ? 'bg-blue-600' : 'bg-white/5'}`}
           >
@@ -225,7 +221,6 @@ return (
         ))}
       </div>
 
-      {/* Панель инструментов: Поиск, Удаление выбранного и Добавить */}
       <div className="mb-6 flex gap-4 items-center">
         <div className="relative">
           <input 
@@ -237,7 +232,7 @@ return (
           />
         </div>
 
-        {/* Кнопка массового удаления */}
+
         <button 
           onClick={deleteSelected}
           disabled={selectedIds.length === 0}
@@ -270,12 +265,10 @@ return (
         </button>
       </div>
       
-      {/* Таблица */}
       <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
         <table className="w-full text-left">
           <thead className="bg-white/10 text-xs uppercase text-gray-400">
             <tr>
-              {/* Чекбокс "Выбрать все" */}
               <th className="px-6 py-4 w-10">
                 <input 
                   type="checkbox" 
@@ -325,7 +318,6 @@ return (
         </table>
       </div>
 
-      {/* Модальное окно добавления */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[2000]">
           <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-white/10 w-full max-w-md shadow-2xl">
@@ -379,7 +371,6 @@ return (
   fetchData();
 }, []);
 
-  // Функция для Dijkstra
   const findPath = async (fromId: number, toId: number) => {
     const apiType = selectedCategory === "DijkstraCheapest" ? "cheapest" : "fastest";
     try {
@@ -398,8 +389,6 @@ return (
     }
   };
 
-  // Новая функция для BFS
-// В функции findReachable
 const [bfsRoutes, setBfsRoutes] = useState<Route[]>([]); // Добавьте новый стейт
 
 const findReachable = async (fromId: number) => {
@@ -430,7 +419,7 @@ const findCritical = async () => {
     const data = await response.json();
     
     if (data.criticalIds) {
-      setHighlightedPath(data.criticalIds); // Используем тот же стейт для подсветки точек
+      setHighlightedPath(data.criticalIds);  
     }
   } catch (error) {
     console.error("Critical Airports error:", error);
@@ -454,31 +443,25 @@ const findMST = async () => {
 };
 
 const findByBudget = async (airportId: number) => {
-  setHighlightedPath([]); 
-  setBudgetRoutes([]);
+  setHighlightedPath([]);
 
   try {
     const response = await fetch(
       `http://localhost:8081/budget?id=${airportId}&maxBudget=${maxBudget}`
     );
+
     const data = await response.json();
 
     if (data.reachableIds) {
-      // Превращаем каждый ID в число
-      setHighlightedPath(data.reachableIds.map((id: any) => Number(id)));
+      const cleaned = data.reachableIds
+        .map((id: any) => Number(id))
+        .filter((id: number) => id !== airportId); // 🔥 убираем старт
+
+      setHighlightedPath(cleaned);
     }
 
-    if (data.usedRoutes) {
-      setBudgetRoutes(
-        data.usedRoutes.map((r: any) => ({
-          source: Number(r.source),      // Важно: в число
-          destination: Number(r.destination), // Важно: в число
-          distance: Number(r.distance)
-        }))
-      );
-    }
   } catch (error) {
-    console.error("Ошибка Budget:", error);
+    console.error("Budget Error:", error);
   }
 };
 
@@ -486,7 +469,7 @@ const findByBudget = async (airportId: number) => {
 
   if (selectedCategory === "BFSK") {
     setSourceAirport(airport);
-    findReachable(airport.airportID); // сразу вызываем BFS
+    findReachable(airport.airportID); 
     return;
   }
 
@@ -496,7 +479,6 @@ const findByBudget = async (airportId: number) => {
     return;
   }
 
-    // Логика для Dijkstra
     if (selectedCategory !== "DijkstraFastest" && selectedCategory !== "DijkstraCheapest") return;
     if (!sourceAirport || (sourceAirport && targetAirport)) {
       setSourceAirport(airport);
@@ -546,7 +528,7 @@ onClick={() => {
   setSourceAirport(null);
   setTargetAirport(null);
   setHighlightedPath([]);
-  setBfsRoutes([]);       // Очищаем линии BFS
+  setBfsRoutes([]);     
 
   if (newCategory === "MST") {
     findMST();
@@ -578,7 +560,6 @@ onClick={() => {
 </button>
       </div>
 
-      {/* Панель управления K для BFS */}
       {selectedCategory === "BFSK" && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-black/80 border border-amber-500/40 p-2 px-4 rounded-full backdrop-blur-md animate-in fade-in slide-in-from-top-4">
           <span className="text-[10px] font-bold text-amber-400 uppercase tracking-tighter">Max Transfers (K):</span>
@@ -593,16 +574,20 @@ onClick={() => {
         </div>
       )}
 
-      {/* Панель управления бюджетом */}
 {selectedCategory === "TravelBudget" && (
-  <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-black/80 border border-green-500/40 p-2 px-4 rounded-full backdrop-blur-md animate-in fade-in slide-in-from-top-4">
-    <span className="text-[10px] font-bold text-green-500 uppercase tracking-tighter">Max Budget ($):</span>
-    <input 
-      type="number" 
+  <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-black/80 border border-green-500/40 p-2 px-4 rounded-full backdrop-blur-md">
+
+    <span className="text-[10px] font-bold text-green-500 uppercase tracking-tighter">
+      Max Budget ($):
+    </span>
+
+    <input
+      type="number"
       value={maxBudget}
       onChange={(e) => setMaxBudget(Number(e.target.value))}
-      className="bg-transparent border-b border-green-500 w-16 text-center text-sm outline-none font-mono text-white"
+      className="bg-transparent border-b border-green-500 w-20 text-center text-sm outline-none font-mono text-white"
     />
+
   </div>
 )}
 
@@ -614,9 +599,8 @@ onClick={() => {
         style={{ height: "100%", width: "100%", background: "#0a0a0a" }}
         zoomControl={false}
       >
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution='&copy; CARTO' />
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution='&copy;  CARTO' noWrap={true} />
 
-        {/* Routes Rendering */}
 {routes.map((route, idx) => {
   
   const from = getAirportById(route.source);
@@ -657,7 +641,13 @@ const shouldFilter =
   (isBudgetMode && budgetRoutes.length > 0);
 
 if (isBudgetMode) {
-  if (!budgetRoutes.some(r => r.source === route.source && r.destination === route.destination)) return null;
+  const exists = budgetRoutes.some(
+    r =>
+      (r.source === route.source && r.destination === route.destination) ||
+      (r.source === route.destination && r.destination === route.source)
+  );
+
+  if (!exists) return null;
 } else if (shouldFilter && !isHighlighted) return null;
 
   return (
@@ -672,7 +662,6 @@ if (isBudgetMode) {
         }}
       />
       
-      {/* Рисуем стрелку только если путь активен */}
       {isHighlighted && (
   <Polygon
     positions={getArrowHead(from, to)}
@@ -694,7 +683,6 @@ if (isBudgetMode) {
   );
 })}
 
-        {/* Airports Rendering */}
         {airports.map((airport) => {
           const isSelected = sourceAirport?.airportID === airport.airportID || targetAirport?.airportID === airport.airportID;
           const isInPath = highlightedPath.includes(airport.airportID);
@@ -722,7 +710,6 @@ if (isBudgetMode) {
         })}
       </MapContainer>
 
-      {/* Окно статистики BFS */}
       {selectedCategory === "BFSK" && sourceAirport && (
         <div className="absolute right-6 top-24 z-[1001] w-64 bg-black/90 backdrop-blur-xl border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(251,191,36,0.15)]">
           <h3 className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
@@ -739,7 +726,7 @@ if (isBudgetMode) {
   onClick={() => { 
     setHighlightedPath([]); 
     setSourceAirport(null); 
-    setBfsRoutes([]); // <--- ОЧИЩАЕМ ЛИНИИ ТУТ
+    setBfsRoutes([]);
   }}
   className="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] transition-all"
 >
@@ -748,32 +735,39 @@ if (isBudgetMode) {
         </div>
       )}
 
-      {selectedCategory === "TravelBudget" && sourceAirport && (
-  <div className="absolute right-6 top-24 z-[1001] w-64 bg-black/90 backdrop-blur-xl border border-green-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(34,197,94,0.15)]">
-    <h3 className="text-green-400 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-      <Wallet size={14} /> Affordable Trips
+{selectedCategory === "TravelBudget" && (
+  <div className="absolute right-6 top-4 z-[1001] w-64 bg-black/90 backdrop-blur-xl border border-green-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+
+    {/* HEADER */}
+    <h3 className="text-green-400 font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+      <Wallet size={14} /> Budget Reachability
     </h3>
-    <p className="text-[10px] text-gray-400 mb-4">Starting from: <span className="text-white">{sourceAirport.code}</span></p>
-    
-    <div className="text-center p-4 bg-white/5 rounded-xl border border-white/5">
-      <div className="text-3xl font-mono text-green-400">{highlightedPath.length}</div>
-      <div className="text-[9px] text-gray-500 uppercase">Destinations found</div>
+
+    {/* COUNTER */}
+    <div className="text-center p-4 bg-white/5 rounded-xl border border-white/5 mb-4">
+      <div className="text-3xl font-mono text-green-400">
+        {highlightedPath.length}
+      </div>
+      <div className="text-[9px] text-gray-500 uppercase">
+        Airports Available
+      </div>
     </div>
-    
-    <button 
-      onClick={() => { 
-  setHighlightedPath([]); 
-  setSourceAirport(null); 
-  setBudgetRoutes([]); 
-}}
-      className="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] text-gray-300 transition-all"
-    >
-      Reset Budget View
-    </button>
+
+    {/* LIST */}
+    <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+      {highlightedPath.map(id => {
+        const airport = getAirportById(id);
+        return (
+          <div key={id} className="text-xs text-gray-300 flex items-center gap-2">
+            ✈ {airport?.code} - {airport?.name}
+          </div>
+        );
+      })}
+    </div>
+
   </div>
 )}
 
-      {/* Окно Dijkstra (без изменений) */}
       {highlightedPath.length > 0 && (selectedCategory === "DijkstraFastest" || selectedCategory === "DijkstraCheapest") && (
         <div className="absolute right-6 top-24 z-[1001] w-72 bg-black/90 backdrop-blur-xl border border-blue-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
           <h3 className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">

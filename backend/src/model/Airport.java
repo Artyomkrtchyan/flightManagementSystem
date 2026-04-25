@@ -6,7 +6,7 @@ public class Airport {
     private String name;
     private double lat;
     private double lng;
-    private String cityName; 
+    private String cityName;
 
     public Airport(int id, String code, String name, double lat, double lng, String cityName) {
         this.id = id;
