@@ -6,9 +6,9 @@
 
     public class DatabaseHelper {
 
-        private final String url = "jdbc:sqlserver://localhost:65057;databaseName=Flights;encrypt=true;trustServerCertificate=true";
-        private final String user = "sa";
-        private final String password = "burunduk";
+        String url = "jdbc:sqlserver://flight-management-system.database.windows.net:1433;databaseName=Flights;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+        private final String user = "Flight";
+        private final String password = "Burunduk!";
 
         public String fetchTable(String tableName) {
             JSONArray allRows = new JSONArray();
