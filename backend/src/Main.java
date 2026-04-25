@@ -345,8 +345,8 @@ public class Main {
 
     private static Connection connectDatabase() throws SQLException {
 
-        String url = "jdbc:sqlserver://localhost:65057;databaseName=Flights;encrypt=true;trustServerCertificate=true";
-        return DriverManager.getConnection(url, "sa", "burunduk");
+        String url = "jdbc:sqlserver://flight-management-system.database.windows.net:1433;databaseName=Flights;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+        return DriverManager.getConnection(url, "Flight", "Burunduk!");
     }
 
     private static Map<Integer, Airport> loadAirports(Connection conn) throws SQLException {
