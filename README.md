@@ -57,7 +57,6 @@ npm start
 ## Authors
 - **Artyom Mkrtchyan**  
 - **Mane Mazmandyan**   
-- **Davit Arakelyan**
 
 ## Notes
 Combines Database (SQL Server) + Data Structures & Algorithms (Java) + Frontend (React)
