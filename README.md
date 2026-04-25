@@ -156,11 +156,7 @@ flightManagementSystem/
 ---
 
 ## 👥 Authors
-
-| Name | University |
-|---|---|
-| **Artyom Mkrtchyan** | UFAR, 2026 |
-| **Mane Mazmandyan** | UFAR, 2026 |
+**Artyom Mkrtchyan** **Mane Mazmandyan**
 
 ---
 
