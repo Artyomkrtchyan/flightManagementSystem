@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Database, ArrowLeft, Trash2, RefreshCw, Table as TableIcon } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8081";
+
 const AdminPanel = ({ onBack }: { onBack: () => void }) => {
   const [tables, setTables] = useState<string[]>([]);
   const [activeTable, setActiveTable] = useState("");
@@ -8,25 +10,25 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/tables")
+    fetch(`${API_URL}/api/tables`)
       .then((res) => res.json())
       .then((list) => {
         setTables(list);
         if (list.length > 0) setActiveTable(list[0]);
       })
-      .catch((err) => console.error("Ошибка при получении списка таблиц:", err));
+      .catch((err) => console.error("Error:", err));
   }, []);
 
   const loadTableData = (tableName: string) => {
     setLoading(true);
-    fetch(`http://localhost:8081/api/data?table=${tableName}`)
+    fetch(`${API_URL}/api/data?table=${tableName}`)
       .then((res) => res.json())
       .then((json) => {
         setData(json);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Ошибка при загрузке данных:", err);
+        console.error("Error:", err);
         setLoading(false);
       });
   };
@@ -57,13 +59,13 @@ const AdminPanel = ({ onBack }: { onBack: () => void }) => {
           onClick={() => loadTableData(activeTable)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all border border-blue-600/30 text-xs font-semibold"
         >
-          <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Обновить
+          <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Update
         </button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full md:w-64 space-y-2">
-          <h3 className="text-[10px] font-bold text-gray-500 uppercase px-2 mb-4">Таблицы в базе</h3>
+          <h3 className="text-[10px] font-bold text-gray-500 uppercase px-2 mb-4">Tables</h3>
           {tables.map((table) => (
             <button
               key={table}
