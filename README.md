@@ -37,6 +37,8 @@
 | **Prim's MST** *(bonus)* | Compute the Minimum Spanning Tree of the flight network | O(E log V) |
 | **Budget Mode** *(bonus)* | Find all destinations reachable within a given cost budget | O((V + E) log V) |
 
+---
+
 ## 🔗 Main Data Structures Used
 
 - **Graph Adjacency List** (for efficient neighbor traversal)
@@ -183,13 +185,6 @@ flightManagementSystem/
 
 ---
 
-## 👥 Authors
-- **Artyom Mkrtchyan** 
-- **Mane Mazmandyan**
-- **Davit Arakelyan**
-
----
-
 ## 👥 TEAM CONTRIBUTIONS
 
 All commits were made from Artyom's GitHub account as the team worked together in shared in-person sessions on a single machine.
@@ -208,6 +203,13 @@ Davit Arakelyan
 - Backend: Prim's MST algorithm, DatabaseHelper CRUD operations, API endpoints /api/tables /api/data /api/add /api/delete
 - Frontend: Admin panel (DB management UI), add/delete rows, search & filter, bulk delete
 - Database: Data population (30+ airports, 80+ routes), triggers (trg_AfterTicketUpdate), query optimization
+
+---
+
+## 👥 Authors
+- **Artyom Mkrtchyan** 
+- **Mane Mazmandyan**
+- **Davit Arakelyan**
 
 ---
 
