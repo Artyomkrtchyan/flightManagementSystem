@@ -184,7 +184,9 @@ flightManagementSystem/
 ---
 
 ## 👥 Authors
-**Artyom Mkrtchyan** and **Mane Mazmandyan**
+**Artyom Mkrtchyan** 
+**Mane Mazmandyan**
+**Davit Arakelyan**
 
 ---
 
