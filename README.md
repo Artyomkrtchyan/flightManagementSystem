@@ -190,5 +190,26 @@ flightManagementSystem/
 
 ---
 
+## 👥 TEAM CONTRIBUTIONS
+
+All commits were made from Artyom's GitHub account as the team worked together in shared in-person sessions on a single machine.
+
+Artyom Mkrtchyan
+- Backend: Graph algorithms (Dijkstra, Articulation Points), HTTP server setup, API endpoints /fastest /cheapest /critical
+- Frontend: Map visualization (Leaflet), route highlighting, algorithm result rendering
+- Database: Schema design (Airports, Routes, Cities tables), index optimization, deployment (Railway, Azure, Vercel)
+
+Mane Mazmandyan
+- Backend: BFS & Budget Finder algorithms, API endpoints /bfs /budget /mst
+- Frontend: Navigation bar, algorithm selector UI, status bar, responsive layout
+- Database: Stored procedures (sp_BookFlight, sp_FindFlightsByCities), views (View_FlightBoard, View_RouteProfit)
+
+Davit Arakelyan
+- Backend: Prim's MST algorithm, DatabaseHelper CRUD operations, API endpoints /api/tables /api/data /api/add /api/delete
+- Frontend: Admin panel (DB management UI), add/delete rows, search & filter, bulk delete
+- Database: Data population (30+ airports, 80+ routes), triggers (trg_AfterTicketUpdate), query optimization
+
+---
+
 *Université Française en Arménie (UFAR) — 2026*  
 *Courses: Data Structures & Databases 1*
