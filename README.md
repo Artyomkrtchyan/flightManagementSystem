@@ -1,4 +1,4 @@
-# ✈️ Flight Connection Optimizer
+# ✈️ Flights Management System
 
 > **Academic Project** — Developed as part of two courses: **Data Structures** & **Databases** at UFAR, 2026
 
@@ -8,9 +8,21 @@
 
 ## 📌 Overview
 
-Every airline booking engine needs to answer questions like: what is the cheapest way to get from city A to city B? What airports are reachable from a given hub? Which routes are structurally most critical?
+  The Flights Management System is a web-based project that models airports and routes as a weighted directed graph, helping users easily explore and analyze flight connections. 
+  
+  It helps answer practical questions faced by any airline, such as: what is the cheapest way to travel from city A to city B? Which route is the fastest? What airports can be reached with a limited number of layovers or within a fixed budget? And which airports are so important that their removal would disrupt the entire network? 
+  
+  All of this is powered by efficient graph algorithms, a Microsoft SQL Server database, and a modern React frontend, providing clear and interactive results.
 
-This project builds a **flight network analyzer** using real-world-inspired data and applies multiple graph algorithms to answer these questions — all backed by a real SQL Server database and served through a live web interface.
+---
+
+## 🎯 Objectives
+- Provide users with the cheapest and fastest flight routes between any two airports
+- Analyze network connectivity and find all airports reachable within a limited number of layovers
+- Detect critical airports (articulation points) whose removal would significantly disrupt the flight network
+- Enable budget-based exploration — show all destinations reachable within a given cost limit
+- Seamlessly integrate graph algorithms with a real relational database (SQL Server)
+- Deliver an intuitive and interactive web interface with map visualization of routes and results
 
 ---
 
@@ -25,6 +37,12 @@ This project builds a **flight network analyzer** using real-world-inspired data
 | **Prim's MST** *(bonus)* | Compute the Minimum Spanning Tree of the flight network | O(E log V) |
 | **Budget Mode** *(bonus)* | Find all destinations reachable within a given cost budget | O((V + E) log V) |
 
+## 🔗 Main Data Structures Used
+
+- **Graph Adjacency List** (for efficient neighbor traversal)
+- **Priority Queue** (for Dijkstra’s algorithm)
+- **Queue** (for BFS)
+- **Disjoint Set / DFS-based structures** (for Articulation Points and Prim’s MST)
 ---
 
 ## 🗂️ Data
@@ -33,6 +51,16 @@ This project builds a **flight network analyzer** using real-world-inspired data
 - **200+ routes** with cost and distance as edge weights
 - Network represented as a **weighted directed graph** using adjacency lists
 - All data stored in **Microsoft SQL Server** (Azure)
+
+---
+
+## 🧩 Approach
+- Model the flight network as a **weighted directed graph**
+- Store all airports and routes persistently in **Microsoft SQL Server**
+- Implement all graph algorithms and business logic in the **Java backend**
+- Expose results through a clean **REST API**
+- Load graph data from the database into memory for efficient algorithm execution
+- Visualize routes, paths, and analysis results on an interactive map in the **React frontend**
 
 ---
 
